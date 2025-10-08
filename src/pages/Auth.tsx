@@ -101,11 +101,13 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="text-left mb-8">
-          <h1 className="text-3xl font-bold text-primary">upSkill</h1>
-        </div>
+    <div className="min-h-screen bg-background relative">
+      <div className="absolute top-4 left-4">
+        <h1 className="text-3xl font-bold text-primary">upSkill</h1>
+      </div>
+      
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
 
         <div className="perspective-1000">
           <Card
@@ -196,6 +198,7 @@ const Auth = () => {
               </div>
             </form>
           </Card>
+        </div>
         </div>
       </div>
     </div>
