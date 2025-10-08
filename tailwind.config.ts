@@ -80,10 +80,30 @@ export default {
             height: "0",
           },
         },
+        "flip": {
+          "0%": { transform: "rotateY(0)" },
+          "100%": { transform: "rotateY(180deg)" }
+        },
+        "flip-back": {
+          "0%": { transform: "rotateY(180deg)" },
+          "100%": { transform: "rotateY(0)" }
+        },
+        "slide-in": {
+          "0%": { transform: "translateX(100%)" },
+          "100%": { transform: "translateX(0)" }
+        },
+        "slide-out": {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(100%)" }
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "flip": "flip 0.6s ease-in-out",
+        "flip-back": "flip-back 0.6s ease-in-out",
+        "slide-in": "slide-in 0.3s ease-out",
+        "slide-out": "slide-out 0.3s ease-out",
       },
     },
   },
