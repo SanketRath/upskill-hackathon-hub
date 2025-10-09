@@ -5,6 +5,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Auth from "./pages/Auth";
 import UserInfo from "./pages/UserInfo";
+import OrganizerInfo from "./pages/OrganizerInfo";
+import OrganizerDashboard from "./pages/OrganizerDashboard";
+import CreateEvent from "./pages/CreateEvent";
 import Home from "./pages/Home";
 import Competitions from "./pages/Competitions";
 import EventDetails from "./pages/EventDetails";
@@ -23,6 +26,9 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Auth />} />
           <Route path="/user-info" element={<UserInfo />} />
+          <Route path="/organizer-info" element={<OrganizerInfo />} />
+          <Route path="/organizer-dashboard" element={<OrganizerDashboard />} />
+          <Route path="/create-event" element={<CreateEvent />} />
           <Route path="/home" element={<Home />} />
           <Route path="/competitions" element={<Competitions />} />
           <Route path="/event/:id" element={<EventDetails />} />

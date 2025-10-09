@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import upskillLogo from "@/assets/upskill-logo.png";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -17,6 +19,7 @@ const Auth = () => {
     password: "",
     confirmPassword: "",
   });
+  const [userRole, setUserRole] = useState<"student" | "organizer">("student");
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -78,7 +81,7 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email: formData.username,
         password: formData.password,
         options: {
@@ -88,7 +91,19 @@ const Auth = () => {
 
       if (error) throw error;
 
-      navigate("/user-info");
+      // Insert user role
+      if (data.user) {
+        await supabase.from("user_roles").insert({
+          user_id: data.user.id,
+          role: userRole,
+        });
+      }
+
+      if (userRole === "organizer") {
+        navigate("/organizer-info");
+      } else {
+        navigate("/user-info");
+      }
     } catch (error: any) {
       toast({
         title: "Error",
@@ -103,7 +118,7 @@ const Auth = () => {
   return (
     <div className="min-h-screen bg-background relative">
       <div className="absolute top-4 left-4">
-        <h1 className="text-3xl font-bold text-primary">upSkill</h1>
+        <img src={upskillLogo} alt="upSkill" className="h-10" />
       </div>
       
       <div className="min-h-screen flex items-center justify-center p-4">
@@ -121,18 +136,34 @@ const Auth = () => {
 
             <form onSubmit={isLogin ? handleLogin : handleSignup}>
               {!isLogin && (
-                <div className="mb-4">
-                  <Label htmlFor="name">Name</Label>
-                  <Input
-                    id="name"
-                    type="text"
-                    value={formData.name}
-                    onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
-                    }
-                    required
-                  />
-                </div>
+                <>
+                  <div className="mb-4">
+                    <Label htmlFor="name">Name</Label>
+                    <Input
+                      id="name"
+                      type="text"
+                      value={formData.name}
+                      onChange={(e) =>
+                        setFormData({ ...formData, name: e.target.value })
+                      }
+                      required
+                    />
+                  </div>
+
+                  <div className="mb-4">
+                    <Label>I am a</Label>
+                    <RadioGroup value={userRole} onValueChange={(value: any) => setUserRole(value)}>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="student" id="student" />
+                        <Label htmlFor="student" className="font-normal cursor-pointer">Student</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="organizer" id="organizer" />
+                        <Label htmlFor="organizer" className="font-normal cursor-pointer">Organizer</Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+                </>
               )}
 
               <div className="mb-4">

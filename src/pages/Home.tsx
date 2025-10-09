@@ -162,6 +162,48 @@ const Home = () => {
             </Card>
           )}
         </section>
+
+        {/* Sponsors Section */}
+        <section className="mb-12">
+          <h2 className="text-2xl font-semibold mb-6">Our Sponsors</h2>
+          <div className="relative overflow-hidden bg-muted/30 rounded-lg py-8">
+            <div className="flex animate-scroll">
+              {['Google', 'Microsoft', 'Amazon', 'Meta', 'Apple', 'Netflix', 'Tesla', 'Adobe', 'Oracle', 'IBM', 'Google', 'Microsoft', 'Amazon', 'Meta', 'Apple'].map((company, index) => (
+                <div
+                  key={index}
+                  className="flex-shrink-0 mx-8 text-3xl font-bold text-muted-foreground/40"
+                  style={{ minWidth: '150px', textAlign: 'center' }}
+                >
+                  {company}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Contact Us Section */}
+        <section className="mb-12">
+          <Card className="bg-primary text-primary-foreground p-8">
+            <h2 className="text-2xl font-semibold mb-6">Contact Us</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              <div>
+                <h3 className="font-semibold mb-2">Email</h3>
+                <p className="opacity-90">support@upskill.com</p>
+              </div>
+              <div>
+                <h3 className="font-semibold mb-2">Phone</h3>
+                <p className="opacity-90">+91 9876543210</p>
+              </div>
+              <div>
+                <h3 className="font-semibold mb-2">Address</h3>
+                <p className="opacity-90">
+                  123 Tech Park, Innovation Street<br />
+                  Bangalore, Karnataka 560001
+                </p>
+              </div>
+            </div>
+          </Card>
+        </section>
       </main>
     </div>
   );

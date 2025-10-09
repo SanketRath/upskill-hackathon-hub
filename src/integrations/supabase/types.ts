@@ -17,6 +17,7 @@ export type Database = {
       events: {
         Row: {
           created_at: string
+          custom_sections: Json | null
           dates_deadlines: string | null
           description: string
           details: string | null
@@ -27,6 +28,7 @@ export type Database = {
           impressions: number
           location: string
           organizer: string
+          organizer_id: string | null
           poster_url: string | null
           prize_money: number | null
           prizes: string | null
@@ -43,6 +45,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          custom_sections?: Json | null
           dates_deadlines?: string | null
           description: string
           details?: string | null
@@ -53,6 +56,7 @@ export type Database = {
           impressions?: number
           location: string
           organizer: string
+          organizer_id?: string | null
           poster_url?: string | null
           prize_money?: number | null
           prizes?: string | null
@@ -69,6 +73,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          custom_sections?: Json | null
           dates_deadlines?: string | null
           description?: string
           details?: string | null
@@ -79,6 +84,7 @@ export type Database = {
           impressions?: number
           location?: string
           organizer?: string
+          organizer_id?: string | null
           poster_url?: string | null
           prize_money?: number | null
           prizes?: string | null
@@ -92,6 +98,50 @@ export type Database = {
           title?: string
           total_slots?: number
           updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_organizer_id_fkey"
+            columns: ["organizer_id"]
+            isOneToOne: false
+            referencedRelation: "organizers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organizers: {
+        Row: {
+          contact_email: string
+          contact_phone: string | null
+          created_at: string | null
+          description: string | null
+          id: string
+          organization_name: string
+          updated_at: string | null
+          user_id: string
+          website: string | null
+        }
+        Insert: {
+          contact_email: string
+          contact_phone?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          organization_name: string
+          updated_at?: string | null
+          user_id: string
+          website?: string | null
+        }
+        Update: {
+          contact_email?: string
+          contact_phone?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          organization_name?: string
+          updated_at?: string | null
+          user_id?: string
+          website?: string | null
         }
         Relationships: []
       }
@@ -248,6 +298,27 @@ export type Database = {
           },
         ]
       }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
       wishlist: {
         Row: {
           created_at: string
@@ -282,13 +353,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       increment_registered_count: {
         Args: { event_id: string }
         Returns: undefined
       }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "student" | "organizer" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -415,6 +493,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["student", "organizer", "admin"],
+    },
   },
 } as const
