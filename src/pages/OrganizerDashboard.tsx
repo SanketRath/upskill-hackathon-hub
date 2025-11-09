@@ -24,6 +24,10 @@ const OrganizerDashboard = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const today = new Date();
+  const upcomingEvents = events.filter(event => new Date(event.event_date) >= today);
+  const pastEvents = events.filter(event => new Date(event.event_date) < today);
+
   useEffect(() => {
     if (isAuthorized) {
       fetchEvents();
@@ -108,33 +112,84 @@ const OrganizerDashboard = () => {
             </Button>
           </Card>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {events.map((event) => (
-              <Card key={event.id} className="p-6">
-                <h3 className="font-bold text-lg mb-4">{event.title}</h3>
-                <div className="space-y-2 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-2">
-                    <Users className="h-4 w-4" />
-                    <span>{event.registered_count}/{event.total_slots} registered</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Eye className="h-4 w-4" />
-                    <span>{event.impressions} views</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <BarChart3 className="h-4 w-4" />
-                    <span>{new Date(event.event_date).toLocaleDateString()}</span>
-                  </div>
+          <div className="space-y-12">
+            {/* Recently Launched Events */}
+            <div>
+              <h2 className="text-2xl font-semibold mb-6">Recently Launched Events</h2>
+              {upcomingEvents.length === 0 ? (
+                <Card className="p-8 text-center">
+                  <p className="text-muted-foreground">No upcoming events</p>
+                </Card>
+              ) : (
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  {upcomingEvents.map((event) => (
+                    <Card key={event.id} className="p-6">
+                      <h3 className="font-bold text-lg mb-4">{event.title}</h3>
+                      <div className="space-y-2 text-sm text-muted-foreground">
+                        <div className="flex items-center gap-2">
+                          <Users className="h-4 w-4" />
+                          <span>{event.registered_count}/{event.total_slots} registered</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Eye className="h-4 w-4" />
+                          <span>{event.impressions} views</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <BarChart3 className="h-4 w-4" />
+                          <span>{new Date(event.event_date).toLocaleDateString()}</span>
+                        </div>
+                      </div>
+                      <Button 
+                        className="w-full mt-4" 
+                        variant="outline"
+                        onClick={() => navigate(`/event-analytics/${event.id}`)}
+                      >
+                        View Analytics
+                      </Button>
+                    </Card>
+                  ))}
                 </div>
-                <Button 
-                  className="w-full mt-4" 
-                  variant="outline"
-                  onClick={() => navigate(`/event-analytics/${event.id}`)}
-                >
-                  View Analytics
-                </Button>
-              </Card>
-            ))}
+              )}
+            </div>
+
+            {/* Past Events */}
+            <div>
+              <h2 className="text-2xl font-semibold mb-6">Past Events</h2>
+              {pastEvents.length === 0 ? (
+                <Card className="p-8 text-center">
+                  <p className="text-muted-foreground">No past events</p>
+                </Card>
+              ) : (
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  {pastEvents.map((event) => (
+                    <Card key={event.id} className="p-6">
+                      <h3 className="font-bold text-lg mb-4">{event.title}</h3>
+                      <div className="space-y-2 text-sm text-muted-foreground">
+                        <div className="flex items-center gap-2">
+                          <Users className="h-4 w-4" />
+                          <span>{event.registered_count}/{event.total_slots} registered</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Eye className="h-4 w-4" />
+                          <span>{event.impressions} views</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <BarChart3 className="h-4 w-4" />
+                          <span>{new Date(event.event_date).toLocaleDateString()}</span>
+                        </div>
+                      </div>
+                      <Button 
+                        className="w-full mt-4" 
+                        variant="outline"
+                        onClick={() => navigate(`/event-analytics/${event.id}`)}
+                      >
+                        View Analytics
+                      </Button>
+                    </Card>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         )}
       </div>
