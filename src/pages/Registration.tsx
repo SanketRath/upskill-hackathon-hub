@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Trash2, Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { teamMemberSchema } from "@/lib/validations";
 
 interface TeamMember {
   name: string;
@@ -131,6 +132,15 @@ const Registration = () => {
         );
       }
 
+      // Validate each team member
+      for (const member of teamMembers) {
+        const validation = teamMemberSchema.safeParse(member);
+        if (!validation.success) {
+          const firstError = validation.error.errors[0];
+          throw new Error(`${firstError.path.join(".")}: ${firstError.message}`);
+        }
+      }
+
       // Create registration
       const { data: registration, error: regError } = await supabase
         .from("registrations")
@@ -157,11 +167,12 @@ const Registration = () => {
 
       if (membersError) throw membersError;
 
-      // Update registered count
-      await supabase
-        .from("events")
-        .update({ registered_count: event.registered_count + 1 })
-        .eq("id", id);
+      // Update registered count using atomic database function
+      const { error: countError } = await supabase.rpc("increment_registered_count", {
+        event_id: id,
+      });
+
+      if (countError) throw countError;
 
       toast({
         title: "Success",

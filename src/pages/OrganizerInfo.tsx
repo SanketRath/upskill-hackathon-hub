@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import upskillLogo from "@/assets/upskill-logo.png";
+import { organizerProfileSchema } from "@/lib/validations";
 
 const OrganizerInfo = () => {
   const navigate = useNavigate();
@@ -26,6 +27,13 @@ const OrganizerInfo = () => {
     setLoading(true);
 
     try {
+      // Validate form data
+      const validation = organizerProfileSchema.safeParse(formData);
+      if (!validation.success) {
+        const firstError = validation.error.errors[0];
+        throw new Error(`${firstError.path.join(".")}: ${firstError.message}`);
+      }
+
       const { data: { user } } = await supabase.auth.getUser();
       
       if (!user) throw new Error("No user found");
@@ -34,9 +42,9 @@ const OrganizerInfo = () => {
         user_id: user.id,
         organization_name: formData.organizationName,
         contact_email: formData.contactEmail,
-        contact_phone: formData.contactPhone,
-        website: formData.website,
-        description: formData.description,
+        contact_phone: formData.contactPhone || null,
+        website: formData.website || null,
+        description: formData.description || null,
       });
 
       if (error) throw error;

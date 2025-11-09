@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import upskillLogo from "@/assets/upskill-logo.png";
+import { loginSchema, signupSchema } from "@/lib/validations";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -36,6 +37,17 @@ const Auth = () => {
     setLoading(true);
 
     try {
+      // Validate login data
+      const validation = loginSchema.safeParse({
+        username: formData.username,
+        password: formData.password,
+      });
+
+      if (!validation.success) {
+        const firstError = validation.error.errors[0];
+        throw new Error(`${firstError.path.join(".")}: ${firstError.message}`);
+      }
+
       const { data, error } = await supabase.auth.signInWithPassword({
         email: formData.username,
         password: formData.password,
@@ -68,19 +80,23 @@ const Auth = () => {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (formData.password !== formData.confirmPassword) {
-      toast({
-        title: "Error",
-        description: "Passwords do not match",
-        variant: "destructive",
-      });
-      return;
-    }
 
     setLoading(true);
 
     try {
+      // Validate signup data
+      const validation = signupSchema.safeParse({
+        name: formData.name,
+        username: formData.username,
+        password: formData.password,
+        confirmPassword: formData.confirmPassword,
+      });
+
+      if (!validation.success) {
+        const firstError = validation.error.errors[0];
+        throw new Error(firstError.message);
+      }
+
       const { data, error } = await supabase.auth.signUp({
         email: formData.username,
         password: formData.password,

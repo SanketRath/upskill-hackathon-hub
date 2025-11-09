@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Plus, BarChart3, Users, Eye } from "lucide-react";
 import upskillLogo from "@/assets/upskill-logo.png";
+import { useRoleCheck } from "@/hooks/useRoleCheck";
 
 interface Event {
   id: string;
@@ -19,20 +20,15 @@ interface Event {
 const OrganizerDashboard = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { isAuthorized, loading: roleLoading } = useRoleCheck("organizer");
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    checkAuth();
-    fetchEvents();
-  }, []);
-
-  const checkAuth = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      navigate("/");
+    if (isAuthorized) {
+      fetchEvents();
     }
-  };
+  }, [isAuthorized]);
 
   const fetchEvents = async () => {
     try {
@@ -71,6 +67,18 @@ const OrganizerDashboard = () => {
     navigate("/");
   };
 
+  if (roleLoading || loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div>Loading...</div>
+      </div>
+    );
+  }
+
+  if (!isAuthorized) {
+    return null;
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <div className="border-b">
@@ -91,9 +99,7 @@ const OrganizerDashboard = () => {
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-8">My Events</h1>
 
-        {loading ? (
-          <p>Loading...</p>
-        ) : events.length === 0 ? (
+        {events.length === 0 ? (
           <Card className="p-12 text-center">
             <p className="text-muted-foreground mb-4">No events created yet</p>
             <Button onClick={() => navigate("/create-event")}>

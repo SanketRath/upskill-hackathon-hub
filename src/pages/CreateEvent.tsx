@@ -9,6 +9,8 @@ import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Plus, X } from "lucide-react";
 import upskillLogo from "@/assets/upskill-logo.png";
+import { useRoleCheck } from "@/hooks/useRoleCheck";
+import { createEventSchema } from "@/lib/validations";
 
 interface CustomSection {
   title: string;
@@ -18,6 +20,7 @@ interface CustomSection {
 const CreateEvent = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { isAuthorized, loading: roleLoading } = useRoleCheck("organizer");
   const [loading, setLoading] = useState(false);
   const [customSections, setCustomSections] = useState<CustomSection[]>([]);
   const [formData, setFormData] = useState({
@@ -60,6 +63,13 @@ const CreateEvent = () => {
     setLoading(true);
 
     try {
+      // Validate form data
+      const validation = createEventSchema.safeParse(formData);
+      if (!validation.success) {
+        const firstError = validation.error.errors[0];
+        throw new Error(`${firstError.path.join(".")}: ${firstError.message}`);
+      }
+
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("No user found");
 
@@ -113,6 +123,18 @@ const CreateEvent = () => {
       setLoading(false);
     }
   };
+
+  if (roleLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div>Loading...</div>
+      </div>
+    );
+  }
+
+  if (!isAuthorized) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-background">

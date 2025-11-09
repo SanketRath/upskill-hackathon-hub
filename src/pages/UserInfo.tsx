@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { userProfileSchema } from "@/lib/validations";
 
 const UserInfo = () => {
   const [formData, setFormData] = useState({
@@ -31,6 +32,20 @@ const UserInfo = () => {
     setLoading(true);
 
     try {
+      // Validate form data
+      const validation = userProfileSchema.safeParse({
+        fullName: formData.fullName,
+        collegeName: formData.collegeName,
+        degree: formData.degree,
+        passoutYear: parseInt(formData.passoutYear),
+        heardFrom: formData.heardFrom,
+      });
+
+      if (!validation.success) {
+        const firstError = validation.error.errors[0];
+        throw new Error(`${firstError.path.join(".")}: ${firstError.message}`);
+      }
+
       const {
         data: { user },
       } = await supabase.auth.getUser();
