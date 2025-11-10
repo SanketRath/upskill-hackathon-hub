@@ -7,6 +7,7 @@ import Auth from "./pages/Auth";
 import UserInfo from "./pages/UserInfo";
 import OrganizerInfo from "./pages/OrganizerInfo";
 import OrganizerDashboard from "./pages/OrganizerDashboard";
+import AdminDashboard from "./pages/AdminDashboard";
 import CreateEvent from "./pages/CreateEvent";
 import Home from "./pages/Home";
 import Competitions from "./pages/Competitions";
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/user-info" element={<UserInfo />} />
           <Route path="/organizer-info" element={<OrganizerInfo />} />
           <Route path="/organizer-dashboard" element={<OrganizerDashboard />} />
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/create-event" element={<CreateEvent />} />
           <Route path="/home" element={<Home />} />
           <Route path="/competitions" element={<Competitions />} />

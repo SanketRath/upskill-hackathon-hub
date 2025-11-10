@@ -20,7 +20,7 @@ const Auth = () => {
     password: "",
     confirmPassword: "",
   });
-  const [userRole, setUserRole] = useState<"student" | "organizer">("student");
+  const [userRole, setUserRole] = useState<"student" | "organizer" | "admin">("student");
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -117,6 +117,8 @@ const Auth = () => {
 
       if (userRole === "organizer") {
         navigate("/organizer-info");
+      } else if (userRole === "admin") {
+        navigate("/admin-dashboard");
       } else {
         navigate("/user-info");
       }
@@ -176,6 +178,10 @@ const Auth = () => {
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="organizer" id="organizer" />
                         <Label htmlFor="organizer" className="font-normal cursor-pointer">Organizer</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="admin" id="admin" />
+                        <Label htmlFor="admin" className="font-normal cursor-pointer">Admin</Label>
                       </div>
                     </RadioGroup>
                   </div>

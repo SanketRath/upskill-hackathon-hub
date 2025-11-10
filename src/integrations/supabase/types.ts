@@ -16,6 +16,8 @@ export type Database = {
     Tables: {
       events: {
         Row: {
+          admin_notes: string | null
+          approval_status: string
           created_at: string
           custom_sections: Json | null
           dates_deadlines: string | null
@@ -44,6 +46,8 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          admin_notes?: string | null
+          approval_status?: string
           created_at?: string
           custom_sections?: Json | null
           dates_deadlines?: string | null
@@ -72,6 +76,8 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          admin_notes?: string | null
+          approval_status?: string
           created_at?: string
           custom_sections?: Json | null
           dates_deadlines?: string | null
@@ -212,9 +218,11 @@ export type Database = {
       }
       registrations: {
         Row: {
+          approval_notes: string | null
           created_at: string
           event_id: string
           id: string
+          organizer_approved: boolean | null
           payment_status: string
           status: string
           team_name: string | null
@@ -222,9 +230,11 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          approval_notes?: string | null
           created_at?: string
           event_id: string
           id?: string
+          organizer_approved?: boolean | null
           payment_status?: string
           status?: string
           team_name?: string | null
@@ -232,9 +242,11 @@ export type Database = {
           user_id: string
         }
         Update: {
+          approval_notes?: string | null
           created_at?: string
           event_id?: string
           id?: string
+          organizer_approved?: boolean | null
           payment_status?: string
           status?: string
           team_name?: string | null

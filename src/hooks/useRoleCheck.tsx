@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
-export const useRoleCheck = (requiredRole: "student" | "organizer") => {
+export const useRoleCheck = (requiredRole: "student" | "organizer" | "admin") => {
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();

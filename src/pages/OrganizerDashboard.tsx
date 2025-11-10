@@ -15,6 +15,8 @@ interface Event {
   registered_count: number;
   impressions: number;
   total_slots: number;
+  approval_status: string;
+  admin_notes?: string;
 }
 
 const OrganizerDashboard = () => {
@@ -27,6 +29,11 @@ const OrganizerDashboard = () => {
   const today = new Date();
   const upcomingEvents = events.filter(event => new Date(event.event_date) >= today);
   const pastEvents = events.filter(event => new Date(event.event_date) < today);
+  const actionRequiredEvents = events.filter(event => {
+    const needsApproval = event.approval_status === 'pending';
+    const hasLowRegistration = event.registered_count < (event.total_slots * 0.2);
+    return needsApproval || hasLowRegistration;
+  });
 
   useEffect(() => {
     if (isAuthorized) {
@@ -113,6 +120,46 @@ const OrganizerDashboard = () => {
           </Card>
         ) : (
           <div className="space-y-12">
+            {/* Action Required */}
+            {actionRequiredEvents.length > 0 && (
+              <div>
+                <h2 className="text-2xl font-semibold mb-6 text-destructive">Action Required</h2>
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  {actionRequiredEvents.map((event) => (
+                    <Card key={event.id} className="p-6 border-destructive">
+                      <h3 className="font-bold text-lg mb-4">{event.title}</h3>
+                      <div className="space-y-2 text-sm">
+                        {event.approval_status === 'pending' && (
+                          <div className="text-destructive font-medium">
+                            ⚠️ Awaiting admin approval
+                          </div>
+                        )}
+                        {event.registered_count < (event.total_slots * 0.2) && (
+                          <div className="text-orange-600 font-medium">
+                            ⚠️ Low registration ({event.registered_count}/{event.total_slots})
+                          </div>
+                        )}
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <Users className="h-4 w-4" />
+                          <span>{event.registered_count}/{event.total_slots} registered</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <Eye className="h-4 w-4" />
+                          <span>{event.impressions} views</span>
+                        </div>
+                      </div>
+                      <Button 
+                        className="w-full mt-4" 
+                        variant="outline"
+                        onClick={() => navigate(`/event-analytics/${event.id}`)}
+                      >
+                        View Details
+                      </Button>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            )}
             {/* Recently Launched Events */}
             <div>
               <h2 className="text-2xl font-semibold mb-6">Recently Launched Events</h2>
