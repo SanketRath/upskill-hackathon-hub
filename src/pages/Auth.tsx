@@ -55,17 +55,46 @@ const Auth = () => {
 
       if (error) throw error;
 
-      // Check if profile exists
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("*")
+      // Check user role
+      const { data: roleData } = await supabase
+        .from("user_roles")
+        .select("role")
         .eq("user_id", data.user.id)
         .single();
 
-      if (profile) {
-        navigate("/home");
+      if (roleData) {
+        // Navigate based on role
+        if (roleData.role === "admin") {
+          navigate("/admin-dashboard");
+        } else if (roleData.role === "organizer") {
+          // Check if organizer profile exists
+          const { data: organizerProfile } = await supabase
+            .from("organizers")
+            .select("*")
+            .eq("user_id", data.user.id)
+            .single();
+
+          if (organizerProfile) {
+            navigate("/organizer-dashboard");
+          } else {
+            navigate("/organizer-info");
+          }
+        } else {
+          // Student role - check if profile exists
+          const { data: profile } = await supabase
+            .from("profiles")
+            .select("*")
+            .eq("user_id", data.user.id)
+            .single();
+
+          if (profile) {
+            navigate("/home");
+          } else {
+            navigate("/user-info");
+          }
+        }
       } else {
-        navigate("/user-info");
+        navigate("/home");
       }
     } catch (error: any) {
       toast({
