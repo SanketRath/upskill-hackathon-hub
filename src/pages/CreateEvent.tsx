@@ -42,6 +42,7 @@ const CreateEvent = () => {
     details: "",
     datesDeadlines: "",
     prizes: "",
+    submissionType: "none" as "none" | "github_link" | "zip_file" | "both",
   });
 
   const addCustomSection = () => {
@@ -103,6 +104,7 @@ const CreateEvent = () => {
         dates_deadlines: formData.datesDeadlines,
         prizes: formData.prizes,
         custom_sections: customSections,
+        submission_type: formData.submissionType,
       });
 
       if (error) throw error;
@@ -314,6 +316,21 @@ const CreateEvent = () => {
                   onChange={(e) => setFormData({ ...formData, prizes: e.target.value })}
                   rows={3}
                 />
+              </div>
+
+              <div>
+                <Label htmlFor="submissionType">Submission Type</Label>
+                <select
+                  id="submissionType"
+                  value={formData.submissionType}
+                  onChange={(e) => setFormData({ ...formData, submissionType: e.target.value as any })}
+                  className="w-full px-3 py-2 border border-input bg-background rounded-md"
+                >
+                  <option value="none">No Submission Required</option>
+                  <option value="github_link">GitHub Link Only</option>
+                  <option value="zip_file">ZIP File Only</option>
+                  <option value="both">Both GitHub Link and ZIP File</option>
+                </select>
               </div>
             </div>
           </Card>

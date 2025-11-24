@@ -42,6 +42,7 @@ export const createEventSchema = z.object({
   details: textSchema(2000),
   datesDeadlines: textSchema(1000),
   prizes: textSchema(1000),
+  submissionType: z.enum(["none", "github_link", "zip_file", "both"]).default("none"),
 });
 
 // User profile validation schema
