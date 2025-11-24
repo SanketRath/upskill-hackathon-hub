@@ -15,6 +15,9 @@ import EventDetails from "./pages/EventDetails";
 import Registration from "./pages/Registration";
 import MyRegistrations from "./pages/MyRegistrations";
 import NotFound from "./pages/NotFound";
+import EventDetailsAdmin from "./pages/EventDetailsAdmin";
+import SubmitProject from "./pages/SubmitProject";
+import ReviewSubmissions from "./pages/ReviewSubmissions";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +39,9 @@ const App = () => (
           <Route path="/event/:id" element={<EventDetails />} />
           <Route path="/register/:id" element={<Registration />} />
           <Route path="/my-registrations" element={<MyRegistrations />} />
+          <Route path="/admin/event/:eventId" element={<EventDetailsAdmin />} />
+          <Route path="/submit-project/:eventId" element={<SubmitProject />} />
+          <Route path="/review-submissions/:eventId" element={<ReviewSubmissions />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

@@ -147,15 +147,15 @@ const OrganizerDashboard = () => {
                           <Eye className="h-4 w-4" />
                           <span>{event.impressions} views</span>
                         </div>
-                      </div>
-                      <Button 
-                        className="w-full mt-4" 
-                        variant="outline"
-                        onClick={() => navigate(`/event-analytics/${event.id}`)}
-                      >
-                        View Details
-                      </Button>
-                    </Card>
+                       </div>
+                       <Button 
+                         className="w-full mt-4" 
+                         variant="outline"
+                         onClick={() => navigate(`/review-submissions/${event.id}`)}
+                       >
+                         Review Submissions
+                       </Button>
+                     </Card>
                   ))}
                 </div>
               </div>

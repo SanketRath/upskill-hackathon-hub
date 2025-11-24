@@ -251,25 +251,16 @@ const AdminDashboard = () => {
                       <div>Date: {new Date(event.event_date).toLocaleDateString()}</div>
                       <div>Slots: {event.total_slots}</div>
                       <div>Created: {new Date(event.created_at).toLocaleDateString()}</div>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button 
-                        className="flex-1"
-                        onClick={() => handleApproveEvent(event.id)}
-                      >
-                        <CheckCircle className="mr-2 h-4 w-4" />
-                        Approve
-                      </Button>
-                      <Button 
-                        variant="destructive"
-                        className="flex-1"
-                        onClick={() => handleRejectEvent(event.id)}
-                      >
-                        <XCircle className="mr-2 h-4 w-4" />
-                        Reject
-                      </Button>
-                    </div>
-                  </Card>
+                     </div>
+                     <div className="flex gap-2">
+                       <Button 
+                         className="flex-1"
+                         onClick={() => navigate(`/admin/event/${event.id}`)}
+                       >
+                         View Details
+                       </Button>
+                     </div>
+                   </Card>
                 ))}
               </div>
             )}

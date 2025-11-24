@@ -37,7 +37,9 @@ export type Database = {
           registered_count: number
           registration_deadline: string
           registration_fee: number
+          rejection_reason: string | null
           stages: string | null
+          submission_type: string | null
           tags: string[] | null
           team_size_max: number
           team_size_min: number
@@ -67,7 +69,9 @@ export type Database = {
           registered_count?: number
           registration_deadline: string
           registration_fee?: number
+          rejection_reason?: string | null
           stages?: string | null
+          submission_type?: string | null
           tags?: string[] | null
           team_size_max?: number
           team_size_min?: number
@@ -97,7 +101,9 @@ export type Database = {
           registered_count?: number
           registration_deadline?: string
           registration_fee?: number
+          rejection_reason?: string | null
           stages?: string | null
+          submission_type?: string | null
           tags?: string[] | null
           team_size_max?: number
           team_size_min?: number
@@ -259,6 +265,66 @@ export type Database = {
             columns: ["event_id"]
             isOneToOne: false
             referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      submissions: {
+        Row: {
+          created_at: string | null
+          evaluation_notes: string | null
+          event_id: string
+          file_url: string | null
+          github_link: string | null
+          id: string
+          is_selected_for_next_round: boolean | null
+          rating: number | null
+          registration_id: string
+          result_published: boolean | null
+          submitted_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          evaluation_notes?: string | null
+          event_id: string
+          file_url?: string | null
+          github_link?: string | null
+          id?: string
+          is_selected_for_next_round?: boolean | null
+          rating?: number | null
+          registration_id: string
+          result_published?: boolean | null
+          submitted_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          evaluation_notes?: string | null
+          event_id?: string
+          file_url?: string | null
+          github_link?: string | null
+          id?: string
+          is_selected_for_next_round?: boolean | null
+          rating?: number | null
+          registration_id?: string
+          result_published?: boolean | null
+          submitted_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "submissions_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "submissions_registration_id_fkey"
+            columns: ["registration_id"]
+            isOneToOne: false
+            referencedRelation: "registrations"
             referencedColumns: ["id"]
           },
         ]
