@@ -27,7 +27,7 @@ export const createEventSchema = z.object({
   title: z.string().trim().min(1, "Event title is required").max(200, "Event title must be less than 200 characters"),
   organizer: nameSchema,
   location: z.string().trim().min(1, "Location is required").max(300, "Location must be less than 300 characters"),
-  eventType: z.string().trim().min(1, "Event type is required").max(100, "Event type must be less than 100 characters"),
+  eventType: z.string().trim().max(100, "Event type must be less than 100 characters").optional().or(z.literal("")),
   eventDate: z.string().min(1, "Event date is required"),
   registrationDeadline: z.string().min(1, "Registration deadline is required"),
   teamSizeMin: z.number().int().min(1, "Minimum team size must be at least 1"),
