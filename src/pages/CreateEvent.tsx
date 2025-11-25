@@ -88,7 +88,7 @@ const CreateEvent = () => {
         title: formData.title,
         organizer: formData.organizer,
         location: formData.location,
-        event_type: formData.eventType,
+        event_type: formData.eventType || "Hackathon",
         event_date: formData.eventDate,
         registration_deadline: formData.registrationDeadline,
         team_size_min: formData.teamSizeMin,
