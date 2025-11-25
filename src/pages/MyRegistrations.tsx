@@ -157,27 +157,45 @@ const MyRegistrations = () => {
                       )}
                     </CardContent>
                   </Link>
-                  
-                  {registration.events.submission_type !== "none" && (
+                   
+                  {/* Result Display */}
+                  {hasSubmission(registration) && registration.submissions![0].result_published && (
                     <CardFooter className="border-t pt-4">
-                      {needsSubmission(registration) ? (
-                        <Button
-                          className="w-full"
-                          onClick={() => navigate(`/submit-project/${registration.event_id}`)}
-                        >
-                          <Upload className="mr-2 h-4 w-4" />
-                          Submit Project
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="outline"
-                          className="w-full"
-                          onClick={() => navigate(`/submit-project/${registration.event_id}`)}
-                        >
-                          <CheckCircle className="mr-2 h-4 w-4" />
-                          View Submission
-                        </Button>
-                      )}
+                      <div className={`w-full p-4 rounded-lg ${registration.submissions![0].is_selected_for_next_round ? 'bg-green-100 dark:bg-green-900/30' : 'bg-orange-100 dark:bg-orange-900/30'}`}>
+                        <div className="text-sm font-semibold mb-1">
+                          {registration.submissions![0].is_selected_for_next_round ? '✅ Selected for Next Round!' : '📊 Evaluated'}
+                        </div>
+                        {registration.submissions![0].rating !== undefined && registration.submissions![0].rating !== null && (
+                          <div className="text-xs text-muted-foreground">
+                            Rating: <span className="font-bold">{registration.submissions![0].rating}/100</span>
+                          </div>
+                        )}
+                      </div>
+                    </CardFooter>
+                  )}
+                  
+                  {registration.events.submission_type !== "none" && !hasSubmission(registration) && (
+                    <CardFooter className="border-t pt-4">
+                      <Button
+                        className="w-full"
+                        onClick={() => navigate(`/submit-project/${registration.event_id}`)}
+                      >
+                        <Upload className="mr-2 h-4 w-4" />
+                        Submit Project
+                      </Button>
+                    </CardFooter>
+                  )}
+                  
+                  {hasSubmission(registration) && !registration.submissions![0].result_published && (
+                    <CardFooter className="border-t pt-4">
+                      <Button
+                        variant="outline"
+                        className="w-full"
+                        onClick={() => navigate(`/submit-project/${registration.event_id}`)}
+                      >
+                        <CheckCircle className="mr-2 h-4 w-4" />
+                        View Submission
+                      </Button>
                     </CardFooter>
                   )}
                 </Card>
