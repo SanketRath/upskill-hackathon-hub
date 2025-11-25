@@ -42,6 +42,11 @@ const EventDetails = () => {
   const [isRegistered, setIsRegistered] = useState(false);
   const [isInWishlist, setIsInWishlist] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [submissionResult, setSubmissionResult] = useState<{
+    rating?: number;
+    is_selected: boolean;
+    result_published: boolean;
+  } | null>(null);
 
   useEffect(() => {
     if (id) {
@@ -49,6 +54,7 @@ const EventDetails = () => {
       checkRegistrationStatus();
       checkWishlistStatus();
       trackView();
+      fetchSubmissionResult();
     }
   }, [id]);
 
@@ -89,6 +95,38 @@ const EventDetails = () => {
       setIsRegistered(!!data);
     } catch (error) {
       // No registration found
+    }
+  };
+
+  const fetchSubmissionResult = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data: registration } = await supabase
+        .from("registrations")
+        .select("id")
+        .eq("event_id", id)
+        .eq("user_id", user.id)
+        .single();
+
+      if (!registration) return;
+
+      const { data: submission } = await supabase
+        .from("submissions")
+        .select("rating, is_selected_for_next_round, result_published")
+        .eq("registration_id", registration.id)
+        .single();
+
+      if (submission?.result_published) {
+        setSubmissionResult({
+          rating: submission.rating,
+          is_selected: submission.is_selected_for_next_round,
+          result_published: submission.result_published,
+        });
+      }
+    } catch (error) {
+      // No submission or result not published
     }
   };
 
@@ -186,6 +224,33 @@ const EventDetails = () => {
                   className="w-full h-full object-cover"
                 />
               </div>
+            )}
+
+            {/* Result Display */}
+            {submissionResult && (
+              <Card className={`p-6 mb-6 ${submissionResult.is_selected ? 'bg-green-50 dark:bg-green-900/20 border-green-500' : 'bg-orange-50 dark:bg-orange-900/20 border-orange-500'}`}>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-xl font-bold mb-2">
+                      {submissionResult.is_selected ? '🎉 Congratulations! You are Selected!' : '📋 Evaluation Complete'}
+                    </h3>
+                    <p className="text-muted-foreground">
+                      {submissionResult.is_selected 
+                        ? 'You have been selected for the next round!' 
+                        : 'Your submission has been evaluated.'}
+                    </p>
+                    {submissionResult.rating !== undefined && submissionResult.rating !== null && (
+                      <div className="mt-3">
+                        <span className="text-sm font-medium">Your Rating: </span>
+                        <span className="text-2xl font-bold">{submissionResult.rating}/100</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="text-4xl">
+                    {submissionResult.is_selected ? '✅' : '📊'}
+                  </div>
+                </div>
+              </Card>
             )}
 
             {/* Event Header */}
